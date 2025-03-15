@@ -2,23 +2,10 @@ import numpy as np
 from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
 
-# from utils.data_operations import euclidian_distance
+# from utils.distance import euclidian_distance
 
 
 class KMeans():
-    """A simple clustering method that forms k clusters by iteratively reassigning
-    samples to the closest centroids and after that moves the centroids to the center
-    of the new formed clusters.
-
-
-    Parameters:
-    -----------
-    k: int
-        The number of clusters the algorithm will form.
-    max_iterations: int
-        The number of iterations the algorithm will run for if it does
-        not converge before that.
-    """
     def __init__(self, k=2, max_iterations=500):
         self.k = k
         self.max_iterations = max_iterations
@@ -81,38 +68,14 @@ class KMeans():
 
         # Iterate until convergence or for max iterations
         for _ in range(self.max_iterations):
-            # Assign samples to closest centroids (create clusters)
+
             clusters = self._create_clusters(centroids, X)
-            # Save current centroids for convergence check
+
             prev_centroids = centroids
-            # Calculate new centroids from the clusters
+
             centroids = self._calculate_centroids(clusters, X)
-            # If no centroids have changed => convergence
             diff = centroids - prev_centroids
             if not diff.any():
                 break
 
         return self._get_cluster_labels(clusters, X)
-
-
-
-
-# Generate synthetic data
-X, _ = make_blobs(n_samples=300, centers=3, random_state=42)
-
-# Scatter plot of the dataset
-plt.scatter(X[:, 0], X[:, 1], s=50, cmap='viridis')
-plt.title("Generated Data")
-plt.show()
-
-
-# Import your KMeans class (assuming it's in the same script or module)
-kmeans = KMeans(k=3, max_iterations=100)
-
-# Predict clusters
-y_pred = kmeans.predict(X)
-
-# Plot the clustered data
-plt.scatter(X[:, 0], X[:, 1], c=y_pred, cmap='viridis', s=50)
-plt.title("K-Means Clustering Result")
-plt.show()
